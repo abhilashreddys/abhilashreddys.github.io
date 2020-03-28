@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2020-03-28T13:54:41+05:30</updated><id>http://localhost:4000/feed.xml</id><title type="html">Abhilash Reddy</title><subtitle>My Awesome Website</subtitle><author><name>Abhilash Reddy</name></author><entry><title type="html">Fake News Detection</title><link href="http://localhost:4000/Fake-News-Detection/" rel="alternate" type="text/html" title="Fake News Detection" /><published>2020-03-28T00:00:00+05:30</published><updated>2020-03-28T00:00:00+05:30</updated><id>http://localhost:4000/Fake%20News%20Detection</id><content type="html" xml:base="http://localhost:4000/Fake-News-Detection/">&lt;!-- ![](https://www.geo.tv/assets/uploads/updates/2018-07-18/l_203781_040549_updates.jpg) --&gt;
+&lt;ul&gt;
+  &lt;li&gt;Some fake articles have relatively frequent use of terms seemingly intended to inspire outrage and the present writing skill in such articles is generally considerably lesser than in standard news.&lt;/li&gt;
+  &lt;li&gt;Detecting fake news articles by analyzing patterns in writing of the articles.&lt;/li&gt;
+  &lt;li&gt;Made using fine tuning BERT&lt;/li&gt;
+  &lt;li&gt;With an Accuarcy of 80% on the custom dataset.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;installation&quot;&gt;Installation&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;All the &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;code&lt;/code&gt; required to get started.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;clone&quot;&gt;Clone&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Clone this repo to your local machine using &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;https://github.com/abhilashreddys/Fake-News-Article.git&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;setup&quot;&gt;Setup&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Install these libraries/packages.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;pip3 &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;pandas numpy scikit-learn bs4
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;pip3 &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;torch
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;pip3 &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;keras
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;pip3 &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;pytorch_pretrained_bert
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;pip3 &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;transformers
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h2 id=&quot;dataset&quot;&gt;Dataset&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Data is collected by scraping the websites of popular news publishing sources.&lt;/li&gt;
+  &lt;li&gt;The collected news articles are judged using the score, quality, bias as metric collected from &lt;a href=&quot;https://www.politifact.com/&quot;&gt;Politilact&lt;/a&gt; and &lt;a href=&quot;https://www.adfontesmedia.com/interactive-media-bias-chart/?v=402f03a963ba&quot;&gt;Media Charts&lt;/a&gt;.&lt;/li&gt;
+  &lt;li&gt;Some basic preprocessing is also done on the text collected from scraping websites.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;preprocessing&quot;&gt;Preprocessing&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;Used &lt;a href=&quot;https://www.crummy.com/software/BeautifulSoup/&quot;&gt;BeautifulSoup&lt;/a&gt; for scraping articles from the web, Beautiful Soup is a Python library designed for quick turnaround projects like screen-scraping&lt;/li&gt;
+  &lt;li&gt;Also used some custom made functions for removing punctuation etc.
+&lt;img src=&quot;https://miro.medium.com/max/495/1*AaAIETIq7XNlLrFQW7BtZg.png&quot; alt=&quot;&quot; /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;scraping from websites listed in &lt;a href=&quot;https://github.com/abhilashreddys/Fake-News-Article/blob/master/politifact_data.csv&quot;&gt;politifact_data.csv&lt;/a&gt;&lt;/p&gt;
+  &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;python3 scrape_politifact.py
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/div&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;scraping from websites listed in &lt;a href=&quot;https://github.com/abhilashreddys/Fake-News-Article/blob/master/Interactive%20Media%20Bias%20Chart%20-%20Ad%20Fontes%20Media.csv&quot;&gt;Interactive Media Bias Chart - Ad Fontes Media.csv&lt;/a&gt;&lt;/p&gt;
+  &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;python3 scrape_media.py
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;  &lt;/div&gt;
+  &lt;ul&gt;
+    &lt;li&gt;Data after scraping and preprocessing &lt;a href=&quot;https://github.com/abhilashreddys/Fake-News-Article/blob/master/politifact_text.csv&quot;&gt;politifact_text.csv&lt;/a&gt; , &lt;a href=&quot;https://github.com/abhilashreddys/Fake-News-Article/blob/master/pre_media.csv&quot;&gt;pre_media.csv&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;model&quot;&gt;Model&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Trained by fine tuning the BERT&lt;/li&gt;
+  &lt;li&gt;Used &lt;a href=&quot;https://arxiv.org/abs/1810.04805&quot;&gt;BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding&lt;/a&gt; with fine tuning&lt;/li&gt;
+  &lt;li&gt;BERT, which stands for Bidirectional Encoder Representations from Transformers.&lt;/li&gt;
+  &lt;li&gt;BERT is designed to pretrain deep bidirectional representations from unlabeled text by jointly conditioning on both left and right context in all layers. As a result, the pre-trained BERT model can be finetuned with just one additional output layer to create state-of-the-art models for a wide range of tasks, such as question answering andlanguage inference, without substantial taskspecific architecture modifications.
+&lt;img src=&quot;https://github.com/manideep2510/siamese-BERT-fake-news-detection-LIAR/blob/master/doc_images/bert.png?raw=true&quot; alt=&quot;&quot; /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-python highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;BertBinaryClassifier&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Module&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;__init__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dropout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;nb&quot;&gt;super&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;BertBinaryClassifier&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;__init__&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bert&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;BertModel&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;from_pretrained&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;'bert-base-uncased'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dropout&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Dropout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dropout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;linear&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Linear&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;768&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sigmoid&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nn&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Sigmoid&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;forward&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tokens&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;masks&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;None&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;):&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pooled_output&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tokens&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;attention_mask&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;masks&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;output_all_encoded_layers&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;False&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;dropout_output&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dropout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pooled_output&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;linear_output&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;linear&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dropout_output&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;proba&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sigmoid&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;linear_output&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;proba&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;weights&quot;&gt;Weights&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Download here : &lt;a href=&quot;https://drive.google.com/drive/folders/108JY7_yROQQsJDFbusVPP1aUmkZ4xe16?usp=sharing&quot;&gt;Link&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;inference&quot;&gt;Inference&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Run &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;inference.py&lt;/code&gt; and mention url of the article you want to test in comand line&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;python3 inference.py url
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;cautions--suggestions&quot;&gt;Cautions &amp;amp; Suggestions&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Check the file locations properly, change it if required.&lt;/li&gt;
+  &lt;li&gt;If you face any problems with script files use notebooks &lt;a href=&quot;https://github.com/abhilashreddys/Fake-News-Article/blob/master/transfrom_spam.ipynb&quot;&gt;transfrom_spam.ipynb&lt;/a&gt; for training and &lt;a href=&quot;https://github.com/abhilashreddys/Fake-News-Article/blob/master/fake_article.ipynb&quot;&gt;fake_article.ipynb&lt;/a&gt; for inference.&lt;/li&gt;
+  &lt;li&gt;Trained only for &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;5 Epochs&lt;/code&gt;, trying to use a better model with more data.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;references&quot;&gt;References&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;For data &lt;a href=&quot;https://www.politifact.com/&quot;&gt;Politilact&lt;/a&gt; and &lt;a href=&quot;https://www.adfontesmedia.com/interactive-media-bias-chart/?v=402f03a963ba&quot;&gt;Media Charts&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://keras.io&quot;&gt;Keras: The Python Deep Learning library&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/huggingface/pytorch-transformers&quot;&gt;A library of state-of-the-art pretrained models for Natural Language Processing&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/pytorch/pytorch&quot;&gt;Pytorch Deep Learning framework&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/sugi-chan/custom_bert_pipeline&quot;&gt;Pytorch BERT usage example&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://arxiv.org/abs/1706.03762&quot;&gt;Attention Is All You Need&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://arxiv.org/abs/1810.04805&quot;&gt;BERT: Pre-training of Deep Bidirectional Transformers for Language
+Understanding&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bibtex&quot;&gt;@article{Wolf2019HuggingFacesTS,
+  title={HuggingFace's Transformers: State-of-the-art Natural Language Processing},
+  author={Thomas Wolf and Lysandre Debut and Victor Sanh and Julien Chaumond and Clement Delangue and Anthony Moi and Pierric Cistac and Tim Rault and R'emi Louf and Morgan Funtowicz and Jamie Brew},
+  journal={ArXiv},
+  year={2019},
+  volume={abs/1910.03771}
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&quot;language-bibtex&quot;&gt;@article{devlin2018bert,
+  title={BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding},
+  author={Devlin, Jacob and Chang, Ming-Wei and Lee, Kenton and Toutanova, Kristina},
+  journal={arXiv preprint arXiv:1810.04805},
+  year={2018}
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;other-implementaions&quot;&gt;Other Implementaions&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/manideep2510/siamese-BERT-fake-news-detection-LIAR&quot;&gt;Triple Branch BERT Siamese Network for fake news classification on LIAR-PLUS dataset&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/ekagra-ranjan/fake-news-detection-LIAR-pytorch&quot;&gt;Fake News Detection by Learning Convolution Filters through Contextualized Attention&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/addy369/Click-Bait-Model&quot;&gt;Based on Click-Baits&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/addy369/Fake_News_Web&quot;&gt;Fake News Web&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/walesdata/newsbot&quot;&gt;Fake News Pipeline Project&lt;/a&gt;, Explained article &lt;a href=&quot;https://towardsdatascience.com/full-pipeline-project-python-ai-for-detecting-fake-news-with-nlp-bbb1eec4936d&quot;&gt;here&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Abhilash Reddy</name></author><category term="machine learning" /><category term="deep learning" /><category term="nlp" /><category term="transformers" /><category term="beautifulsoup" /><summary type="html">Deep Learning, NLP, BERT</summary></entry><entry><title type="html">Cube Solving Bot</title><link href="http://localhost:4000/cube-solver/" rel="alternate" type="text/html" title="Cube Solving Bot" /><published>2019-10-07T00:00:00+05:30</published><updated>2019-10-07T00:00:00+05:30</updated><id>http://localhost:4000/cube%20solver</id><content type="html" xml:base="http://localhost:4000/cube-solver/">&lt;p&gt;&lt;strong&gt;A Rubik’s cube solving bot using computer vision&lt;/strong&gt; &lt;a href=&quot;https://drive.google.com/file/d/1Ai2gsshSgDxANHX0ggLj5ml3GZyzHdWl/view&quot;&gt;(Video)&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;The Rubik’s cube when placed in front of the webcam is captured and cropped.&lt;/p&gt;
+
+&lt;p&gt;The average hue, saturation and value of each tile are found and converted to the corresponding colour by matching the values with predefined data.&lt;/p&gt;
+
+&lt;p&gt;The colours are stored in a 3D array and processed to a format required by the kociemba algorithm which returns a solution sequence which is further processed to use only 5 stepper motors&lt;/p&gt;
+
+&lt;p&gt;The solution string is passed to an Arduino via serial port using pyserial which rotates the corresponding stepper motors&lt;/p&gt;
+
+&lt;p&gt;The NEMA-17 stepper motors are controlled by motor drivers on a RAMPS 1.4 board attached to an Arduino MEGA microcontroller board.&lt;/p&gt;
+&lt;h2 id=&quot;dependencies-and-requirements&quot;&gt;Dependencies and Requirements&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Python 3.7&lt;/li&gt;
+  &lt;li&gt;Arduino IDE&lt;/li&gt;
+  &lt;li&gt;OpenCV&lt;/li&gt;
+  &lt;li&gt;pyserial&lt;/li&gt;
+  &lt;li&gt;kociemba (https://github.com/muodov/kociemba)&lt;/li&gt;
+  &lt;li&gt;numpy&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;usage&quot;&gt;Usage&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;Before running calibrate the HSV values in final_cube_solver.py by finding HSV values for each color of your cube in different lighting conditions using cube_state_finder.py in tests folder&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;After correct color is being recognised upload final.ino to the arduino mega attach the RAMPS 1.4 and stepper motors according to datasheet&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Run final_cube_solver.py and scan each face in an orientation as provided in https://github.com/muodov/kociemba&lt;/li&gt;
+  &lt;li&gt;The program should output around 100 moves after replacing the up face moves&lt;/li&gt;
+  &lt;li&gt;These moves will automatically be sent to the arduino by pyserial&lt;/li&gt;
+  &lt;li&gt;Kmeans color classification is in kmeans.py and is not integrated with final_cube_solver.py
+    &lt;h2 id=&quot;files&quot;&gt;Files&lt;/h2&gt;
+  &lt;/li&gt;
+  &lt;li&gt;final_cube_solver is the main file including all functions from scanning cube to writing to arduino&lt;/li&gt;
+  &lt;li&gt;scrambleunscramble.py is for demonstration purposes and just scrambles and reverses it.&lt;/li&gt;
+  &lt;li&gt;rubikscube_implementation.py is not used anywhere and just applies the transformations corresponding to an algorithm and returns the new cube state&lt;/li&gt;
+  &lt;li&gt;pyserialtest.py is for testing purposes and directly writes some moves to the arduino and moves the steppers&lt;/li&gt;
+  &lt;li&gt;tests folder contains various attempts and fails at automatic cube detection
+    &lt;h3 id=&quot;made-by&quot;&gt;Made by&lt;/h3&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/kousikr26&quot;&gt;Kousik Rajesh&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/yoimABD&quot;&gt;Abdul Ahad&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/abhilashreddys&quot;&gt;Abhilash Reddy&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;</content><author><name>Abhilash Reddy</name></author><category term="computer vision" /><category term="OpenCV" /><category term="kociemba" /><category term="arduino" /><summary type="html">Computer Vision, OpenCV, Arduino</summary></entry></feed>
