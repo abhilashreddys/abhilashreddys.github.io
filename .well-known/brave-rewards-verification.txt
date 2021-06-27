@@ -1,0 +1,4 @@
+This is a Brave Rewards publisher verification file.
+
+Domain: abhilashreddys.github.io
+Token: 294a20011c58f98fdf8172bbb70858c86614597c8d2a900dc8228d5ed9e2ea3b
